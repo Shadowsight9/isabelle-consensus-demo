@@ -46,9 +46,9 @@ lemma invariant_propose:
     and ‹inv1 msgs states ∧ inv2 msgs states›
   shows ‹inv1 msgs' states ∧ inv2 msgs' states›
 proof -
-  have ‹⋀sender proc val.
-      ((sender, Send proc (Accept val)) ∈ msgs') ⟷
-      ((sender, Send proc (Accept val)) ∈ msgs)›
+  have ‹∀sender proc val.
+      (sender, Send proc (Accept val)) ∈ msgs' ⟷
+      (sender, Send proc (Accept val)) ∈ msgs›
     using assms(1) by blast
   then show ?thesis
     by (meson assms(2) inv1_def inv2_def)
@@ -57,7 +57,7 @@ qed
 lemma invariant_decide:
   assumes ‹states' = states (0 := Some val)›
     and ‹msgs' = msgs ∪ {(0, Send sender (Accept val))}›
-    and ‹states 0 = None›
+    and ‹states 0 = None ∨ states 0 = Some val›
     and ‹inv1 msgs states ∧ inv2 msgs states›
   shows ‹inv1 msgs' states' ∧ inv2 msgs' states'›
 proof -
@@ -78,7 +78,7 @@ proof -
     proof (cases ‹(p1, Send p2 (Accept v)) ∈ msgs›)
       case True
       then show ?thesis
-        by (metis assms(3) assms(4) inv2_def option.simps(3))
+        by (metis assms(1) assms(3) assms(4) fun_upd_same inv2_def option.distinct(1))
     next
       case False
       then show ?thesis
@@ -86,38 +86,6 @@ proof -
     qed
   }
   ultimately show ?thesis
-    by (simp add: inv1_def inv2_def)
-qed
-
-lemma invariant_decided:
-  assumes ‹msgs' = msgs ∪ {(0, Send sender (Accept val))}›
-    and ‹states 0 = Some val›
-    and ‹inv1 msgs states ∧ inv2 msgs states›
-  shows ‹inv1 msgs' states ∧ inv2 msgs' states›
-proof -
-  {
-    fix p v
-    assume ‹p ≠ 0 ∧ states p = Some v›
-    hence ‹∃sender. (sender, Send p (Accept v)) ∈ msgs›
-      by (meson assms(3) inv1_def)
-    hence ‹∃sender. (sender, Send p (Accept v)) ∈ msgs'›
-      using assms(1) by blast
-  }
-  moreover {
-    fix p1 p2 v
-    assume asm: ‹(p1, Send p2 (Accept v)) ∈ msgs'›
-    have ‹states 0 = Some v›
-    proof (cases ‹(p1, Send p2 (Accept v)) ∈ msgs›)
-      case True
-      then show ?thesis
-        by (meson assms(3) inv2_def)
-    next
-      case False
-      then show ?thesis
-        using asm assms(1) assms(2) by blast
-    qed
-  }
-  ultimately show ‹inv1 msgs' states ∧ inv2 msgs' states›
     by (simp add: inv1_def inv2_def)
 qed
 
@@ -229,7 +197,7 @@ proof (cases event)
         using Receive Propose assms(1) assms(2) assms(3) by auto
         (* for some reason sledgehammer couldn't find the line above *)
       then show ?thesis
-        by (simp add: invariant_decided assms(5) Some)
+        by (metis Some assms(3) assms(5) fun_upd_same invariant_decide)
     qed
   next
     case (Accept val)
