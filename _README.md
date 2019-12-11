@@ -3,10 +3,11 @@ Correctness proofs of distributed systems with Isabelle
 
 This Gist accompanies a Talk by [Martin Kleppmann](https://martin.kleppmann.com/):
 
-* [40-minute version given at Strange Loop 2019](https://www.youtube.com/watch?v=7w4KC6i9Yac)
+* [40-minute version given at Strange Loop 2019](https://www.youtube.com/watch?v=7w4KC6i9Yac) ([slides](https://speakerdeck.com/ept/correctness-proofs-of-distributed-systems-with-isabelle))
 * [40-minute version given at Code Mesh LDN 2019](https://www.youtube.com/watch?v=NfdP6wwjsGk)
-* [2-hour **extended version**, which I recorded at home](https://www.youtube.com/watch?v=Uav5jWHNghY)
-* [Slides for conference version](https://speakerdeck.com/ept/correctness-proofs-of-distributed-systems-with-isabelle)
+* [2-hour **extended version**](https://www.youtube.com/watch?v=Uav5jWHNghY), which I recorded at home
+
+[Download Isabelle](http://isabelle.in.tum.de/) to play with the proofs. Have fun!
 
 Abstract
 --------
